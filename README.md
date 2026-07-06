@@ -32,6 +32,9 @@ El proyecto tiene dos aplicaciones que comparten cuenta y datos:
   muscular con notas de técnica, más tus ejercicios personalizados.
 - **📈 Progreso** — gráficas de volumen semanal, evolución de peso y 1RM
   estimado por ejercicio, y kilómetros de cardio.
+- **🗺️ Rutas sobre mapa real** — las actividades con GPS (grabadas con la
+  app Android o importadas de Strava) muestran su recorrido sobre un mapa de
+  OpenStreetMap, sin claves de API.
 - **🏆 Récords personales** — tus mejores marcas se detectan automáticamente.
 - **🎯 Objetivos** — metas de distancia mensual, sesiones semanales, peso en
   un ejercicio o peso corporal, con barra de progreso en el panel.

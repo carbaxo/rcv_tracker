@@ -5,7 +5,7 @@ import { useWorkouts } from "../lib/db";
 import { formatDuration, isoDate, pace } from "../lib/geo";
 import { CARDIO_SPORTS, type Workout } from "../lib/types";
 import { colors } from "../theme";
-import RouteTrace from "../components/RouteTrace";
+import RouteMap from "../components/RouteMap";
 import { Card, Stat } from "../components/ui";
 
 function startOfWeekIso(): string {
@@ -48,7 +48,7 @@ function WorkoutRow({ workout }: { workout: Workout }) {
       </Pressable>
       {open && hasRoute && (
         <View style={{ marginTop: 10 }}>
-          <RouteTrace route={workout.cardio!.route!} height={180} />
+          <RouteMap route={workout.cardio!.route!} height={180} />
         </View>
       )}
       {open && !isCardio && workout.exercises && (

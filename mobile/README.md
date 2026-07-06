@@ -29,8 +29,12 @@ sincroniza en tiempo real vía Firestore.
   frecuencia cardiaca, desnivel y el trazado de la ruta. Las actividades ya
   importadas se detectan por su ID y no se duplican. Los tokens se guardan
   cifrados en el dispositivo (SecureStore) y se refrescan solos al caducar.
+- **🗺️ Mapas reales** — las rutas (grabadas o importadas) se muestran sobre
+  un mapa de OpenStreetMap, sin claves de API ni servicios de pago. El zoom
+  se ajusta solo para encuadrar el recorrido y el mapa también se ve en vivo
+  mientras grabas.
 - **🏠 Inicio** — resumen semanal/mensual y tus últimos entrenamientos
-  (también los registrados desde la web), con vista del trazado GPS.
+  (también los registrados desde la web), con vista de la ruta en el mapa.
 - **👤 Perfil** — cuenta, estadísticas y cierre de sesión.
 
 El registro detallado de gimnasio, los planes, las gráficas y los objetivos

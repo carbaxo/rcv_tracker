@@ -19,7 +19,7 @@ import {
 } from "../lib/tracking";
 import { CARDIO_SPORTS, type CardioSport } from "../lib/types";
 import { colors } from "../theme";
-import RouteTrace from "../components/RouteTrace";
+import RouteMap from "../components/RouteMap";
 import { Button, Card, Stat } from "../components/ui";
 
 type Status = "idle" | "tracking" | "paused" | "finished";
@@ -258,11 +258,11 @@ export default function GpsScreen() {
 
           <Card style={{ padding: 8 }}>
             {route.length > 1 ? (
-              <RouteTrace route={route} />
+              <RouteMap route={route} />
             ) : (
               <View style={{ height: 220, alignItems: "center", justifyContent: "center" }}>
                 <Text style={{ color: colors.textFaint }}>
-                  El trazado aparecerá aquí en cuanto empieces a moverte
+                  El mapa aparecerá aquí en cuanto empieces a moverte
                 </Text>
               </View>
             )}
@@ -292,7 +292,7 @@ export default function GpsScreen() {
             </View>
           </Card>
           <Card style={{ padding: 8 }}>
-            <RouteTrace route={route} />
+            <RouteMap route={route} />
           </Card>
           <Button
             title="💾 Guardar actividad"
