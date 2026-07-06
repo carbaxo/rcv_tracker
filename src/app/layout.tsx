@@ -1,0 +1,35 @@
+import type { Metadata, Viewport } from "next";
+import { AuthProvider } from "@/context/AuthContext";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "RCV Tracker · Tu entrenamiento, sincronizado",
+  description:
+    "Registra cardio y gimnasio, crea planes de entrenamiento y sigue tu progreso desde cualquier dispositivo.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "RCV Tracker",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0a0f14",
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="es">
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
+    </html>
+  );
+}
