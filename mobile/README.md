@@ -15,6 +15,12 @@ sincroniza en tiempo real vía Firestore.
   actividad), y la sesión se restaura intacta si Android llega a matar la
   app. Al guardar, la actividad aparece al instante en la web.
 
+  Incluye **autopausa opcional** (interruptor en la pantalla de GPS, la
+  preferencia se recuerda): si te paras más de 5 segundos —un semáforo, un
+  descanso— el cronómetro se pausa solo y se reanuda al detectar movimiento,
+  con histéresis de velocidad para no oscilar. El tiempo parado no cuenta
+  para el ritmo.
+
   > Para grabar con la pantalla apagada, Android pedirá el permiso de
   > ubicación **«Permitir siempre»**. Si solo concedes «mientras se usa», la
   > app lo detecta y graba únicamente con la app en pantalla.

@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { addWorkout } from "../lib/db";
 import { capRoute, formatClock, isoDate, pace } from "../lib/geo";
 import {
   clearSession,
   elapsedSec as sessionElapsedSec,
+  getAutoPausePref,
   getSession,
+  isAutoPaused,
   isTracking,
   pauseTracking,
   resumeTracking,
+  setAutoPausePref,
   startTracking,
   stopTracking,
   type TrackingSession,
@@ -29,8 +32,19 @@ export default function GpsScreen() {
   const [elapsed, setElapsed] = useState(0);
   const [saving, setSaving] = useState(false);
   const [bgMode, setBgMode] = useState<"background" | "foreground">("background");
+  const [autoPause, setAutoPause] = useState(true);
   const statusRef = useRef<Status>("idle");
   statusRef.current = status;
+
+  // Preferencia de autopausa persistida entre sesiones
+  useEffect(() => {
+    getAutoPausePref().then(setAutoPause);
+  }, []);
+
+  const toggleAutoPause = (value: boolean) => {
+    setAutoPause(value);
+    setAutoPausePref(value);
+  };
 
   // Si la app se cerró con una grabación activa, la restauramos tal cual:
   // el servicio en primer plano siguió grabando mientras tanto.
@@ -70,7 +84,7 @@ export default function GpsScreen() {
 
   const start = async () => {
     try {
-      const mode = await startTracking(sport);
+      const mode = await startTracking(sport, autoPause);
       if (!mode) {
         Alert.alert(
           "Permiso necesario",
@@ -187,6 +201,25 @@ export default function GpsScreen() {
               ))}
             </View>
           </Card>
+          <Card>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: colors.text, fontWeight: "700" }}>
+                  ⏯ Autopausa
+                </Text>
+                <Text style={{ color: colors.textFaint, fontSize: 12, marginTop: 2, lineHeight: 17 }}>
+                  Pausa el cronómetro automáticamente cuando te paras (semáforos,
+                  descansos) y lo reanuda al volver a moverte.
+                </Text>
+              </View>
+              <Switch
+                value={autoPause}
+                onValueChange={toggleAutoPause}
+                trackColor={{ false: colors.inputBorder, true: colors.accentDark }}
+                thumbColor={autoPause ? colors.accent : colors.textFaint}
+              />
+            </View>
+          </Card>
           <Button title="▶  Empezar actividad" onPress={start} style={{ paddingVertical: 18 }} />
           <Text style={styles.hint}>
             La grabación funciona también con la pantalla apagada o la app
@@ -204,13 +237,22 @@ export default function GpsScreen() {
               <Stat label="Distancia" value={`${distanceKm.toFixed(2)} km`} color={colors.cardio} />
               <Stat label="Ritmo" value={`${pace(durationMin, distanceKm)} /km`} />
             </View>
-            <Text style={{ color: colors.textFaint, fontSize: 12, textAlign: "center" }}>
+            <Text
+              style={{
+                color: session && isAutoPaused(session) ? "#fbbf24" : colors.textFaint,
+                fontSize: 12,
+                textAlign: "center",
+              }}
+            >
               {status === "paused"
                 ? "⏸ En pausa"
-                : !session?.gotFix
-                  ? "📡 Buscando señal GPS…"
-                  : `📡 GPS activo · ${route.length} puntos` +
-                    (bgMode === "background" ? " · graba en segundo plano" : "")}
+                : session && isAutoPaused(session)
+                  ? "⏯ Autopausa — te has parado; se reanuda sola al moverte"
+                  : !session?.gotFix
+                    ? "📡 Buscando señal GPS…"
+                    : `📡 GPS activo · ${route.length} puntos` +
+                      (bgMode === "background" ? " · graba en segundo plano" : "") +
+                      (session?.autoPauseEnabled ? " · autopausa" : "")}
             </Text>
           </Card>
 

@@ -129,4 +129,3 @@ src/
 - Importación de archivos GPX / FIT (Garmin, Polar…)
 - Recordatorios de entrenamiento con notificaciones push
 - Modo claro y selector de idioma
-- Autopausa en la grabación GPS (detectar cuando te paras)

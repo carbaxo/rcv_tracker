@@ -14,6 +14,7 @@ import type { CardioSport, RoutePoint } from "./types";
 
 export const GPS_TASK = "rcv-gps-tracking";
 const SESSION_KEY = "gps_session_v1";
+const AUTO_PAUSE_PREF_KEY = "gps_autopause_pref";
 
 // Lecturas con precisión peor que esto (metros) se descartan
 const MAX_ACCURACY_M = 35;
@@ -22,15 +23,39 @@ const MAX_JUMP_M = 200;
 // Movimientos menores que esto se consideran ruido estando parado
 const MIN_STEP_M = 2;
 
+// Autopausa (con histéresis para no oscilar):
+// por debajo de esta velocidad se considera que estás parado…
+const AUTO_PAUSE_BELOW_MS = 0.6; // m/s
+// …y hace falta superar esta velocidad para reanudar
+const AUTO_RESUME_ABOVE_MS = 1.0; // m/s
+// Tiempo parado antes de activar la autopausa
+const AUTO_PAUSE_AFTER_MS = 5000;
+
 export interface TrackingSession {
   sport: CardioSport;
   startedAt: number; // epoch ms
-  pausedAccumMs: number; // tiempo total en pausa acumulado
+  pausedAccumMs: number; // tiempo total en pausa manual acumulado
   pauseStartedAt: number | null; // null = grabando
   distanceM: number;
   points: RoutePoint[];
   lastPoint: RoutePoint | null;
+  lastTimestamp: number | null; // epoch ms de la última lectura válida
   gotFix: boolean; // ya hay señal GPS válida
+  // Autopausa (opcional)
+  autoPauseEnabled: boolean;
+  autoPausedAccumMs: number; // tiempo total en autopausa acumulado
+  autoPauseStartedAt: number | null; // null = no está en autopausa
+  stillSince: number | null; // desde cuándo estás parado (aún sin autopausar)
+}
+
+// Preferencia del usuario (persistente): ¿autopausa activada?
+export async function getAutoPausePref(): Promise<boolean> {
+  const raw = await AsyncStorage.getItem(AUTO_PAUSE_PREF_KEY);
+  return raw === null ? true : raw === "1";
+}
+
+export async function setAutoPausePref(enabled: boolean) {
+  await AsyncStorage.setItem(AUTO_PAUSE_PREF_KEY, enabled ? "1" : "0");
 }
 
 export async function getSession(): Promise<TrackingSession | null> {
@@ -49,7 +74,28 @@ export async function clearSession() {
 export function elapsedSec(s: TrackingSession): number {
   const pausedMs =
     s.pausedAccumMs + (s.pauseStartedAt ? Date.now() - s.pauseStartedAt : 0);
-  return Math.max(0, Math.floor((Date.now() - s.startedAt - pausedMs) / 1000));
+  const autoPausedMs =
+    s.autoPausedAccumMs + (s.autoPauseStartedAt ? Date.now() - s.autoPauseStartedAt : 0);
+  return Math.max(
+    0,
+    Math.floor((Date.now() - s.startedAt - pausedMs - autoPausedMs) / 1000)
+  );
+}
+
+export function isAutoPaused(s: TrackingSession): boolean {
+  return s.autoPauseStartedAt !== null;
+}
+
+// Cierra un intervalo de autopausa abierto (al pausar manualmente, terminar
+// o detectar movimiento) acumulando su duración.
+function foldAutoPause(s: TrackingSession, now: number): TrackingSession {
+  if (s.autoPauseStartedAt === null) return s;
+  return {
+    ...s,
+    autoPausedAccumMs: s.autoPausedAccumMs + (now - s.autoPauseStartedAt),
+    autoPauseStartedAt: null,
+    stillSince: null,
+  };
 }
 
 // La tarea debe definirse en el ámbito global del bundle: se importa desde
@@ -60,25 +106,61 @@ TaskManager.defineTask(GPS_TASK, async ({ data, error }) => {
   const session = await getSession();
   if (!session || session.pauseStartedAt !== null) return;
 
-  let { distanceM, lastPoint, gotFix } = session;
-  const points = session.points;
+  let s = { ...session, points: [...session.points] };
 
   for (const loc of locations) {
     const acc = loc.coords.accuracy ?? 999;
     if (acc > MAX_ACCURACY_M) continue;
-    gotFix = true;
+    s.gotFix = true;
+    const now = loc.timestamp || Date.now();
     const p: RoutePoint = { lat: loc.coords.latitude, lng: loc.coords.longitude };
-    if (lastPoint) {
-      const d = haversineM(lastPoint, p);
-      if (d > MAX_JUMP_M) continue;
-      if (d < MIN_STEP_M) continue;
-      distanceM += d;
+
+    // Velocidad: la del GPS si es válida; si no, derivada del desplazamiento
+    let speed = loc.coords.speed ?? -1;
+    if (speed < 0 && s.lastPoint && s.lastTimestamp && now > s.lastTimestamp) {
+      speed = haversineM(s.lastPoint, p) / ((now - s.lastTimestamp) / 1000);
     }
-    lastPoint = p;
-    points.push(p);
+
+    if (s.autoPauseEnabled && speed >= 0) {
+      if (s.autoPauseStartedAt !== null) {
+        // En autopausa: ¿volvemos a movernos?
+        if (speed >= AUTO_RESUME_ABOVE_MS) {
+          s = foldAutoPause(s, now);
+          // No unimos el hueco: la distancia continúa desde este punto
+          s.lastPoint = p;
+          s.lastTimestamp = now;
+          s.points.push(p);
+        }
+        continue; // parado: ni distancia ni puntos
+      }
+      if (speed < AUTO_PAUSE_BELOW_MS) {
+        if (s.stillSince === null) s.stillSince = now;
+        else if (now - s.stillSince >= AUTO_PAUSE_AFTER_MS) {
+          // Llevamos varios segundos parados: activar autopausa,
+          // descontando ya el tiempo que llevábamos quietos
+          s.autoPauseStartedAt = s.stillSince;
+          continue;
+        }
+      } else {
+        s.stillSince = null;
+      }
+    }
+
+    if (s.lastPoint) {
+      const d = haversineM(s.lastPoint, p);
+      if (d > MAX_JUMP_M) continue;
+      if (d < MIN_STEP_M) {
+        s.lastTimestamp = now;
+        continue;
+      }
+      s.distanceM += d;
+    }
+    s.lastPoint = p;
+    s.lastTimestamp = now;
+    s.points.push(p);
   }
 
-  await setSession({ ...session, distanceM, points, lastPoint, gotFix });
+  await setSession(s);
 });
 
 export async function isTracking(): Promise<boolean> {
@@ -94,7 +176,8 @@ export async function isTracking(): Promise<boolean> {
 // - "foreground": solo "mientras se usa" → graba con la app abierta
 // - null: sin permiso de ubicación
 export async function startTracking(
-  sport: CardioSport
+  sport: CardioSport,
+  autoPauseEnabled: boolean
 ): Promise<"background" | "foreground" | null> {
   const fg = await Location.requestForegroundPermissionsAsync();
   if (fg.status !== "granted") return null;
@@ -111,7 +194,12 @@ export async function startTracking(
     distanceM: 0,
     points: [],
     lastPoint: null,
+    lastTimestamp: null,
     gotFix: false,
+    autoPauseEnabled,
+    autoPausedAccumMs: 0,
+    autoPauseStartedAt: null,
+    stillSince: null,
   });
 
   await Location.startLocationUpdatesAsync(GPS_TASK, {
@@ -134,7 +222,9 @@ export async function startTracking(
 export async function pauseTracking() {
   const s = await getSession();
   if (!s || s.pauseStartedAt !== null) return;
-  await setSession({ ...s, pauseStartedAt: Date.now() });
+  // La pausa manual cierra la autopausa para no descontar el tiempo dos veces
+  const now = Date.now();
+  await setSession({ ...foldAutoPause(s, now), pauseStartedAt: now });
 }
 
 export async function resumeTracking() {
@@ -144,9 +234,11 @@ export async function resumeTracking() {
     ...s,
     pausedAccumMs: s.pausedAccumMs + (Date.now() - s.pauseStartedAt),
     pauseStartedAt: null,
+    stillSince: null,
     // No unimos el hueco de la pausa: la distancia continúa desde el
     // siguiente punto válido
     lastPoint: null,
+    lastTimestamp: null,
   });
 }
 
@@ -156,15 +248,22 @@ export async function stopTracking(): Promise<TrackingSession | null> {
   if (await isTracking()) {
     await Location.stopLocationUpdatesAsync(GPS_TASK);
   }
-  const s = await getSession();
-  if (s && s.pauseStartedAt !== null) {
-    const finished = {
+  let s = await getSession();
+  if (!s) return null;
+  const now = Date.now();
+  let changed = false;
+  if (s.autoPauseStartedAt !== null) {
+    s = foldAutoPause(s, now);
+    changed = true;
+  }
+  if (s.pauseStartedAt !== null) {
+    s = {
       ...s,
-      pausedAccumMs: s.pausedAccumMs + (Date.now() - s.pauseStartedAt),
+      pausedAccumMs: s.pausedAccumMs + (now - s.pauseStartedAt),
       pauseStartedAt: null,
     };
-    await setSession(finished);
-    return finished;
+    changed = true;
   }
+  if (changed) await setSession(s);
   return s;
 }
