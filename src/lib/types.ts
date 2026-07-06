@@ -92,6 +92,8 @@ export interface Workout {
   volumeKg?: number;
   // ID de la actividad original si se importó desde Strava (evita duplicados)
   stravaId?: number;
+  // ID de la sesión si se importó del reloj vía Health Connect (app Android)
+  healthConnectId?: string;
   createdAt: number;
 }
 

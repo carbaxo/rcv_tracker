@@ -59,5 +59,6 @@ export interface Workout {
   cardio?: CardioData;
   volumeKg?: number;
   stravaId?: number; // presente si la actividad se importó de Strava
+  healthConnectId?: string; // presente si vino del reloj vía Health Connect
   createdAt: number;
 }

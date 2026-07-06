@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import HomeScreen from "./src/screens/HomeScreen";
 import GpsScreen from "./src/screens/GpsScreen";
 import StravaScreen from "./src/screens/StravaScreen";
+import WatchScreen from "./src/screens/WatchScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import { colors } from "./src/theme";
@@ -16,6 +17,7 @@ const Tab = createBottomTabNavigator();
 const TABS = [
   { name: "Inicio", component: HomeScreen, icon: "🏠" },
   { name: "GPS", component: GpsScreen, icon: "🛰️" },
+  { name: "Reloj", component: WatchScreen, icon: "⌚" },
   { name: "Strava", component: StravaScreen, icon: "🔗" },
   { name: "Perfil", component: ProfileScreen, icon: "👤" },
 ];

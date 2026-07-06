@@ -32,7 +32,11 @@ export default function WorkoutCard({ workout }: { workout: Workout }) {
             <p className="font-semibold">{workout.name}</p>
             <p className="text-xs text-slate-400">
               {formatDateShort(workout.date)} · {formatDuration(workout.durationMin)}
-              {workout.stravaId ? " · 🔗 Strava" : ""}
+              {workout.stravaId
+                ? " · 🔗 Strava"
+                : workout.healthConnectId
+                  ? " · ⌚ Reloj"
+                  : ""}
             </p>
           </div>
         </div>

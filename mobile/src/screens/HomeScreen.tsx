@@ -29,7 +29,7 @@ function WorkoutRow({ workout }: { workout: Workout }) {
           <View style={{ flex: 1 }}>
             <Text style={{ color: colors.text, fontWeight: "700" }} numberOfLines={1}>
               {workout.name}
-              {workout.stravaId ? "  🔗" : ""}
+              {workout.stravaId ? "  🔗" : workout.healthConnectId ? "  ⌚" : ""}
             </Text>
             <Text style={{ color: colors.textMuted, fontSize: 12 }}>
               {workout.date} · {formatDuration(workout.durationMin)}

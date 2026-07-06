@@ -24,6 +24,22 @@ sincroniza en tiempo real vía Firestore.
   > Para grabar con la pantalla apagada, Android pedirá el permiso de
   > ubicación **«Permitir siempre»**. Si solo concedes «mientras se usa», la
   > app lo detecta y graba únicamente con la app en pantalla.
+- **⌚ Importación desde tu reloj o pulsera (Health Connect)** — Xiaomi,
+  Amazfit, Samsung, Garmin… Cualquier reloj cuya app sincronice con Health
+  Connect (el puente oficial de salud de Android). Se importan las sesiones
+  de ejercicio con distancia, tiempo, pulsaciones medias, calorías y la ruta
+  GPS cuando el reloj la registró, deduplicadas por su ID de sesión.
+
+  **Con un reloj Xiaomi**: en la app **Mi Fitness**, ve a Perfil → Ajustes →
+  Health Connect y activa la sincronización de ejercicio. Después, en la
+  pestaña ⌚ Reloj de esta app: conectar → conceder permisos → importar.
+  (Alternativa: vincula Mi Fitness con Strava y usa la pestaña Strava; usa
+  solo una de las dos vías para no duplicar.)
+
+  > Health Connect requiere Android 8+ y la app «Salud Conectada» de Google
+  > Play (integrada en el sistema desde Android 14). Funciona en la APK /
+  > dev build, no en Expo Go.
+
 - **🔗 Importación desde Strava (API oficial)** — conecta tu cuenta con OAuth
   e importa hasta tus últimas 200 actividades con distancia, tiempo,
   frecuencia cardiaca, desnivel y el trazado de la ruta. Las actividades ya
