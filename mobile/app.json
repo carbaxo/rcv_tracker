@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "RCV Tracker",
+    "slug": "rcv-tracker",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "rcvtracker",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0a0f14",
+    "platforms": ["android"],
+    "android": {
+      "package": "com.rcv.tracker",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "RCV Tracker usa tu ubicación para grabar la ruta de tus entrenamientos de cardio."
+        }
+      ],
+      "expo-secure-store"
+    ]
+  }
+}

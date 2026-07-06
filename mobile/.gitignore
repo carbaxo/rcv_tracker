@@ -1,0 +1,12 @@
+node_modules/
+.expo/
+dist/
+web-build/
+android/
+ios/
+*.apk
+*.aab
+
+# Variables de entorno (claves de Firebase y Strava)
+.env*.local
+.env

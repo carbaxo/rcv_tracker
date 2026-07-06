@@ -6,6 +6,7 @@ import { CARDIO_SPORTS } from "@/lib/types";
 import { formatDateShort, formatDuration, pace } from "@/lib/stats";
 import { useAuth } from "@/context/AuthContext";
 import { deleteWorkout } from "@/lib/db";
+import RouteTrace from "./RouteTrace";
 
 export default function WorkoutCard({ workout }: { workout: Workout }) {
   const { user } = useAuth();
@@ -31,6 +32,7 @@ export default function WorkoutCard({ workout }: { workout: Workout }) {
             <p className="font-semibold">{workout.name}</p>
             <p className="text-xs text-slate-400">
               {formatDateShort(workout.date)} · {formatDuration(workout.durationMin)}
+              {workout.stravaId ? " · 🔗 Strava" : ""}
             </p>
           </div>
         </div>
@@ -66,6 +68,11 @@ export default function WorkoutCard({ workout }: { workout: Workout }) {
 
       {open && (
         <div className="mt-3 border-t border-base-700/60 pt-3">
+          {isCardio && (workout.cardio?.route?.length ?? 0) > 1 && (
+            <div className="mb-2 rounded-xl bg-base-800/50 p-2">
+              <RouteTrace route={workout.cardio!.route!} />
+            </div>
+          )}
           {!isCardio && workout.exercises && (
             <ul className="space-y-2 text-sm">
               {workout.exercises.map((ex, i) => (

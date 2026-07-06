@@ -65,12 +65,19 @@ export const CARDIO_SPORTS: { value: CardioSport; label: string; emoji: string }
   { value: "otro", label: "Otro", emoji: "💪" },
 ];
 
+export interface RoutePoint {
+  lat: number;
+  lng: number;
+}
+
 export interface CardioData {
   sport: CardioSport;
   distanceKm: number;
   avgHr?: number | null;
   elevationM?: number | null;
   calories?: number | null;
+  // Trazado GPS grabado desde la app Android o importado de Strava
+  route?: RoutePoint[];
 }
 
 export interface Workout {
@@ -83,6 +90,8 @@ export interface Workout {
   exercises?: WorkoutExercise[];
   cardio?: CardioData;
   volumeKg?: number;
+  // ID de la actividad original si se importó desde Strava (evita duplicados)
+  stravaId?: number;
   createdAt: number;
 }
 

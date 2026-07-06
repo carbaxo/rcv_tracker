@@ -1,8 +1,16 @@
 # 💪 RCV Tracker
 
-Aplicación web de seguimiento de entrenamiento estilo Strava, pero completa:
+Aplicación de seguimiento de entrenamiento estilo Strava, pero completa:
 **cardio + gimnasio + planes de entrenamiento**, con inicio de sesión con
 Google y sincronización automática de tus datos entre todos tus dispositivos.
+
+El proyecto tiene dos aplicaciones que comparten cuenta y datos:
+
+- **Web (PWA)** — este directorio. Toda la funcionalidad: gimnasio, planes,
+  gráficas, récords, objetivos…
+- **📱 App Android** — [`mobile/`](./mobile). Nativa (React Native + Expo),
+  con **rutas GPS en vivo** para cardio e **importación desde Strava** vía su
+  API oficial. Ver [mobile/README.md](./mobile/README.md).
 
 ## ✨ Funcionalidades
 
@@ -116,8 +124,8 @@ src/
 
 ## 🗺️ Ideas para el futuro
 
-- Rutas GPS en vivo para cardio (geolocalización del navegador)
 - Comparativas y funciones sociales (retos entre amigos)
-- Importación desde Strava / Garmin (archivos GPX y FIT)
+- Importación de archivos GPX / FIT (Garmin, Polar…)
 - Recordatorios de entrenamiento con notificaciones push
 - Modo claro y selector de idioma
+- Grabación GPS también en segundo plano (pantalla apagada) en la app Android
