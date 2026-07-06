@@ -9,8 +9,9 @@ El proyecto tiene dos aplicaciones que comparten cuenta y datos:
 - **Web (PWA)** — este directorio. Toda la funcionalidad: gimnasio, planes,
   gráficas, récords, objetivos…
 - **📱 App Android** — [`mobile/`](./mobile). Nativa (React Native + Expo),
-  con **rutas GPS en vivo** para cardio e **importación desde Strava** vía su
-  API oficial. Ver [mobile/README.md](./mobile/README.md).
+  con **rutas GPS en vivo** para cardio (también con la pantalla apagada,
+  mediante un servicio en segundo plano) e **importación desde Strava** vía
+  su API oficial. Ver [mobile/README.md](./mobile/README.md).
 
 ## ✨ Funcionalidades
 
@@ -128,4 +129,4 @@ src/
 - Importación de archivos GPX / FIT (Garmin, Polar…)
 - Recordatorios de entrenamiento con notificaciones push
 - Modo claro y selector de idioma
-- Grabación GPS también en segundo plano (pantalla apagada) en la app Android
+- Autopausa en la grabación GPS (detectar cuando te paras)

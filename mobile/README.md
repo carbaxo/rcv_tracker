@@ -6,10 +6,18 @@ sincroniza en tiempo real vía Firestore.
 
 ## ✨ Qué hace la app
 
-- **🛰️ Cardio con GPS en vivo** — graba tu ruta mientras corres o pedaleas:
-  distancia, tiempo y ritmo en directo, con filtrado de señal (descarta
-  lecturas imprecisas y saltos de GPS), pausa/reanudación y trazado del
-  recorrido. Al guardar, la actividad aparece al instante en la web.
+- **🛰️ Cardio con GPS en vivo, también en segundo plano** — graba tu ruta
+  mientras corres o pedaleas: distancia, tiempo y ritmo en directo, con
+  filtrado de señal (descarta lecturas imprecisas y saltos de GPS),
+  pausa/reanudación y trazado del recorrido. La grabación **sigue funcionando
+  con la pantalla apagada o la app minimizada** gracias a un servicio en
+  primer plano de Android (verás una notificación persistente durante la
+  actividad), y la sesión se restaura intacta si Android llega a matar la
+  app. Al guardar, la actividad aparece al instante en la web.
+
+  > Para grabar con la pantalla apagada, Android pedirá el permiso de
+  > ubicación **«Permitir siempre»**. Si solo concedes «mientras se usa», la
+  > app lo detecta y graba únicamente con la app en pantalla.
 - **🔗 Importación desde Strava (API oficial)** — conecta tu cuenta con OAuth
   e importa hasta tus últimas 200 actividades con distancia, tiempo,
   frecuencia cardiaca, desnivel y el trazado de la ruta. Las actividades ya

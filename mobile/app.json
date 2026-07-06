@@ -13,17 +13,24 @@
       "versionCode": 1,
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION"
       ]
     },
     "plugins": [
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "RCV Tracker usa tu ubicación para grabar la ruta de tus entrenamientos de cardio."
+          "locationWhenInUsePermission": "RCV Tracker usa tu ubicación para grabar la ruta de tus entrenamientos de cardio.",
+          "locationAlwaysAndWhenInUsePermission": "RCV Tracker usa tu ubicación en segundo plano para seguir grabando la ruta con la pantalla apagada.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-task-manager"
     ]
   }
 }
