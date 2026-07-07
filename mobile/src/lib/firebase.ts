@@ -6,13 +6,24 @@ import {
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// Configuración del proyecto Firebase "rcv-tracker" (los mismos valores que
+// usa la web). Son identificadores públicos: la seguridad la imponen las
+// reglas de Firestore. Se pueden sobrescribir con variables de entorno.
 const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+  apiKey:
+    process.env.EXPO_PUBLIC_FIREBASE_API_KEY ??
+    "AIzaSyBzmzFKuLpA_MTDwS4fYWzzSUft-tNTaHg",
+  authDomain:
+    process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "rcv-tracker.firebaseapp.com",
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID ?? "rcv-tracker",
+  storageBucket:
+    process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET ??
+    "rcv-tracker.firebasestorage.app",
+  messagingSenderId:
+    process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? "998609267174",
+  appId:
+    process.env.EXPO_PUBLIC_FIREBASE_APP_ID ??
+    "1:998609267174:web:600a0d6f867d05d164ce27",
 };
 
 export const firebaseConfigured = Boolean(

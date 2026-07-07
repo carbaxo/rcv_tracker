@@ -75,13 +75,14 @@ El proyecto tiene dos aplicaciones que comparten cuenta y datos:
 git clone https://github.com/carbaxo/rcv_tracker.git
 cd rcv_tracker
 npm install
-
-# Copia la plantilla y pega tus claves de Firebase
-cp .env.example .env.local
-# (edita .env.local con los valores del paso anterior)
-
 npm run dev
 ```
+
+> La configuración del proyecto Firebase `rcv-tracker` ya va incluida en
+> `src/lib/firebase.ts` (son identificadores públicos; la seguridad la ponen
+> las reglas de Firestore). Si quieres usar otro proyecto de Firebase, copia
+> `.env.example` como `.env.local` y pon ahí tus claves: tienen prioridad
+> sobre las incluidas.
 
 Abre [http://localhost:3000](http://localhost:3000) e inicia sesión con Google.
 

@@ -7,13 +7,26 @@ import {
   type Firestore,
 } from "firebase/firestore";
 
+// Configuración del proyecto Firebase "rcv-tracker". Estos valores son
+// identificadores públicos (van dentro de cualquier app de Firebase); la
+// seguridad real la imponen las reglas de Firestore y los dominios
+// autorizados de Authentication. Se pueden sobrescribir con variables
+// de entorno para apuntar a otro proyecto.
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey:
+    process.env.NEXT_PUBLIC_FIREBASE_API_KEY ??
+    "AIzaSyBzmzFKuLpA_MTDwS4fYWzzSUft-tNTaHg",
+  authDomain:
+    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "rcv-tracker.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? "rcv-tracker",
+  storageBucket:
+    process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ??
+    "rcv-tracker.firebasestorage.app",
+  messagingSenderId:
+    process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? "998609267174",
+  appId:
+    process.env.NEXT_PUBLIC_FIREBASE_APP_ID ??
+    "1:998609267174:web:600a0d6f867d05d164ce27",
 };
 
 export const firebaseConfigured = Boolean(

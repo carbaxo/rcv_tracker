@@ -66,9 +66,9 @@ jobs:
           EOF
 
       - name: Avisar si faltan secretos
-        if: ${{ secrets.FIREBASE_API_KEY == '' }}
+        if: ${{ secrets.GOOGLE_WEB_CLIENT_ID == '' || secrets.GOOGLE_ANDROID_CLIENT_ID == '' }}
         run: |
-          echo "::warning::No hay secretos de Firebase configurados: la APK se compilará pero mostrará 'Falta configuración' al abrirla. Añade los secretos (ver comentario inicial de este workflow) y vuelve a ejecutarlo."
+          echo "::warning::Faltan GOOGLE_WEB_CLIENT_ID y/o GOOGLE_ANDROID_CLIENT_ID: la APK se compilará (la config de Firebase va incluida en el código), pero el botón de iniciar sesión con Google no funcionará hasta añadir esos secretos y recompilar."
 
       - name: Generar el proyecto nativo (expo prebuild)
         run: npx expo prebuild -p android --no-install
