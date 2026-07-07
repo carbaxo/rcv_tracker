@@ -21,7 +21,7 @@ name: Compilar APK de Android
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, claude/fitness-tracking-app-j8l3ci]
     paths: ["mobile/**", ".github/workflows/android-apk.yml"]
 
 jobs:
