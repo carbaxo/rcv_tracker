@@ -92,8 +92,28 @@ npx expo run:android        # con un emulador o móvil por USB
 
 ### 3. Generar la APK
 
-Con [EAS Build](https://docs.expo.dev/build/setup/) (gratuito, compila en la
-nube, no necesitas Android Studio):
+**Opción A — GitHub Actions (recomendada, sin instalar nada):** el
+repositorio incluye el workflow
+[`.github/workflows/android-apk.yml`](../.github/workflows/android-apk.yml)
+que compila la APK en GitHub.
+
+1. En GitHub: **Settings → Secrets and variables → Actions** y crea los
+   secretos `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`,
+   `FIREBASE_PROJECT_ID`, `FIREBASE_STORAGE_BUCKET`,
+   `FIREBASE_MESSAGING_SENDER_ID`, `FIREBASE_APP_ID`,
+   `GOOGLE_WEB_CLIENT_ID`, `GOOGLE_ANDROID_CLIENT_ID`, `STRAVA_CLIENT_ID` y
+   `STRAVA_CLIENT_SECRET` (los mismos valores que irían en `mobile/.env`).
+2. Pestaña **Actions → Compilar APK de Android → Run workflow**.
+3. Al terminar, descarga la APK desde **Artifacts** e instálala en el móvil.
+
+La primera ejecución genera además el **keystore de firma** y muestra su
+**SHA-1** en el resumen del run: esa huella es la que debes registrar en el
+cliente OAuth de Android de Google (paso 1.2). Guarda el keystore como
+secreto `ANDROID_KEYSTORE_BASE64` (instrucciones en el propio resumen) para
+que todas las APKs futuras se firmen igual.
+
+**Opción B — [EAS Build](https://docs.expo.dev/build/setup/)** (compila en
+la nube de Expo, no necesitas Android Studio):
 
 ```bash
 npm install -g eas-cli
@@ -101,7 +121,7 @@ eas login
 eas build -p android --profile preview   # genera una APK instalable
 ```
 
-O de forma local si tienes el SDK de Android:
+**Opción C — local**, si tienes el SDK de Android:
 
 ```bash
 npx expo prebuild -p android
