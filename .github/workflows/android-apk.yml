@@ -24,6 +24,9 @@ on:
     branches: [main, claude/fitness-tracking-app-j8l3ci]
     paths: ["mobile/**", ".github/workflows/android-apk.yml"]
 
+permissions:
+  contents: write # necesario para publicar la APK en Releases
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -124,6 +127,19 @@ jobs:
           name: rcv-tracker-apk
           path: mobile/android/app/build/outputs/apk/release/app-release.apk
           retention-days: 30
+
+      # En main (o al lanzarlo a mano) la APK se publica además como Release,
+      # con un enlace de descarga permanente en la pestaña Releases.
+      - name: Publicar la APK en Releases
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk rcv-tracker.apk
+          gh release create "v1.0.${{ github.run_number }}" rcv-tracker.apk \
+            --title "RCV Tracker v1.0.${{ github.run_number }}" \
+            --notes "APK de Android firmada, generada automáticamente por GitHub Actions (run #${{ github.run_number }})." \
+            --latest
 
       - name: Publicar el keystore como artefacto
         if: steps.keystore.outputs.generated == 'true'
