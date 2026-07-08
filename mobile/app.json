@@ -7,6 +7,10 @@
     "scheme": "rcvtracker",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#0a0f14",
+    "splash": {
+      "backgroundColor": "#0a0f14",
+      "resizeMode": "contain"
+    },
     "platforms": ["android"],
     "android": {
       "package": "com.rcv.tracker",
