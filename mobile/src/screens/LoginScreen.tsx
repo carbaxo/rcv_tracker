@@ -1,10 +1,27 @@
-import { StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { colors } from "../theme";
 import { Button, Card } from "../components/ui";
 
 export default function LoginScreen() {
   const { signInWithGoogle, configured, canSignIn } = useAuth();
+  const [busy, setBusy] = useState(false);
+
+  const handleSignIn = async () => {
+    setBusy(true);
+    try {
+      await signInWithGoogle();
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      // El usuario cerró el selector de cuenta: no es un error
+      if (!/cancel/i.test(message)) {
+        Alert.alert("No se pudo iniciar sesión", message);
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -20,7 +37,8 @@ export default function LoginScreen() {
       {configured && canSignIn ? (
         <Button
           title="Continuar con Google"
-          onPress={signInWithGoogle}
+          onPress={handleSignIn}
+          loading={busy}
           style={{ marginTop: 28, alignSelf: "stretch", paddingVertical: 16 }}
         />
       ) : (

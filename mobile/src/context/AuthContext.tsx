@@ -12,18 +12,49 @@ import {
   signOut as fbSignOut,
   type User,
 } from "firebase/auth";
-import * as Google from "expo-auth-session/providers/google";
-import * as WebBrowser from "expo-web-browser";
 import { firebaseConfigured, getFirebaseAuth } from "../lib/firebase";
 
-WebBrowser.maybeCompleteAuthSession();
+// Inicio de sesión con el SDK nativo de Google Sign-In: selector de cuenta
+// nativo de Android (sin pasar por el navegador) y compatible con las APKs
+// firmadas. Google identifica la app por su paquete + huella SHA-1 (el
+// cliente OAuth Android del proyecto) y el webClientId da el idToken con el
+// que se entra en Firebase — la misma cuenta que en la web.
+//
+// El módulo es nativo (existe en la APK / dev build, no en Expo Go), así
+// que se carga en tiempo de ejecución.
+
+// ID de cliente OAuth de tipo Web del proyecto rcv-tracker (identificador
+// público; sobrescribible por variable de entorno para otro proyecto).
+const WEB_CLIENT_ID =
+  process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ??
+  "998609267174-e53ps481lgiglsb48oni5kno01ael4fr.apps.googleusercontent.com";
+
+interface GoogleSigninModule {
+  GoogleSignin: {
+    configure: (options: { webClientId: string }) => void;
+    hasPlayServices: (options?: {
+      showPlayServicesUpdateDialog?: boolean;
+    }) => Promise<boolean>;
+    signIn: () => Promise<{ idToken?: string | null; data?: { idToken?: string | null } }>;
+    signOut: () => Promise<null>;
+  };
+}
+
+function loadGoogleSignin(): GoogleSigninModule | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    return require("@react-native-google-signin/google-signin") as GoogleSigninModule;
+  } catch {
+    return null;
+  }
+}
 
 interface AuthState {
   user: User | null;
   loading: boolean;
   configured: boolean;
   canSignIn: boolean;
-  signInWithGoogle: () => void;
+  signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -32,28 +63,13 @@ const AuthContext = createContext<AuthState>({
   loading: true,
   configured: false,
   canSignIn: false,
-  signInWithGoogle: () => {},
+  signInWithGoogle: async () => {},
   signOut: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
-  // IDs de cliente OAuth del proyecto rcv-tracker. Son identificadores
-  // públicos (van dentro de la app y en las URLs de login); se pueden
-  // sobrescribir con variables de entorno para otro proyecto.
-  const webClientId =
-    process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ??
-    "998609267174-e53ps481lgiglsb48oni5kno01ael4fr.apps.googleusercontent.com";
-  const androidClientId =
-    process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID ??
-    "998609267174-i4lnaso2jjbm27257vn5knjr53vkqbd7.apps.googleusercontent.com";
-
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    clientId: webClientId,
-    androidClientId: androidClientId,
-  });
 
   useEffect(() => {
     if (!firebaseConfigured) {
@@ -67,16 +83,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return unsub;
   }, []);
 
-  // Cuando Google devuelve el id_token, iniciamos sesión en Firebase con él:
-  // así el usuario es EL MISMO que en la web y comparte todos sus datos.
-  useEffect(() => {
-    if (response?.type === "success" && response.params.id_token) {
-      const credential = GoogleAuthProvider.credential(response.params.id_token);
-      signInWithCredential(getFirebaseAuth(), credential).catch((e) =>
-        console.error("Error iniciando sesión en Firebase:", e)
+  const signInWithGoogle = async () => {
+    const mod = loadGoogleSignin();
+    if (!mod) {
+      throw new Error(
+        "Google Sign-In no está disponible en Expo Go: usa la APK compilada."
       );
     }
-  }, [response]);
+    const { GoogleSignin } = mod;
+    GoogleSignin.configure({ webClientId: WEB_CLIENT_ID });
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+    const result = await GoogleSignin.signIn();
+    // v12 devuelve { idToken }; v13 lo anida en { data: { idToken } }
+    const idToken = result.idToken ?? result.data?.idToken;
+    if (!idToken) {
+      throw new Error("Google no devolvió el token de identidad.");
+    }
+    const credential = GoogleAuthProvider.credential(idToken);
+    await signInWithCredential(getFirebaseAuth(), credential);
+  };
+
+  const signOut = async () => {
+    try {
+      loadGoogleSignin()?.GoogleSignin.signOut();
+    } catch {
+      // sin sesión nativa que cerrar
+    }
+    await fbSignOut(getFirebaseAuth());
+  };
 
   return (
     <AuthContext.Provider
@@ -84,11 +118,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         loading,
         configured: firebaseConfigured,
-        canSignIn: Boolean(request && webClientId),
-        signInWithGoogle: () => promptAsync(),
-        signOut: async () => {
-          await fbSignOut(getFirebaseAuth());
-        },
+        canSignIn: firebaseConfigured,
+        signInWithGoogle,
+        signOut,
       }}
     >
       {children}
