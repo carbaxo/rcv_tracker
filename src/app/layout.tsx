@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "RCV Tracker · Tu entrenamiento, sincronizado",
   description:
     "Registra cardio y gimnasio, crea planes de entrenamiento y sigue tu progreso desde cualquier dispositivo.",
-  manifest: "/manifest.json",
+  manifest: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/manifest.json`,
   appleWebApp: {
     capable: true,
     title: "RCV Tracker",
