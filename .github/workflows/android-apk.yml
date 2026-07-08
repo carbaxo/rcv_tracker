@@ -66,18 +66,24 @@ jobs:
           EOF
 
       - name: Avisar si faltan secretos
-        if: ${{ secrets.GOOGLE_WEB_CLIENT_ID == '' || secrets.GOOGLE_ANDROID_CLIENT_ID == '' }}
+        env:
+          WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
+          ANDROID_CLIENT_ID: ${{ secrets.GOOGLE_ANDROID_CLIENT_ID }}
         run: |
-          echo "::warning::Faltan GOOGLE_WEB_CLIENT_ID y/o GOOGLE_ANDROID_CLIENT_ID: la APK se compilará (la config de Firebase va incluida en el código), pero el botón de iniciar sesión con Google no funcionará hasta añadir esos secretos y recompilar."
+          if [ -z "$WEB_CLIENT_ID" ] || [ -z "$ANDROID_CLIENT_ID" ]; then
+            echo "::warning::Faltan GOOGLE_WEB_CLIENT_ID y/o GOOGLE_ANDROID_CLIENT_ID: la APK se compilará (la config de Firebase va incluida en el código), pero el botón de iniciar sesión con Google no funcionará hasta añadir esos secretos y recompilar."
+          fi
 
       - name: Generar el proyecto nativo (expo prebuild)
         run: npx expo prebuild -p android --no-install
 
       - name: Preparar el keystore de firma
         id: keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
-          if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
-            echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/debug.keystore
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > android/app/debug.keystore
             echo "generated=false" >> "$GITHUB_OUTPUT"
             echo "Usando el keystore del secreto ANDROID_KEYSTORE_BASE64."
           else
