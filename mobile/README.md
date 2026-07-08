@@ -98,11 +98,11 @@ repositorio incluye el workflow
 que compila la APK en GitHub.
 
 1. En GitHub: **Settings → Secrets and variables → Actions** y crea los
-   secretos `GOOGLE_WEB_CLIENT_ID`, `GOOGLE_ANDROID_CLIENT_ID`,
-   `STRAVA_CLIENT_ID` y `STRAVA_CLIENT_SECRET`. (La configuración de
-   Firebase del proyecto `rcv-tracker` ya va incluida en el código; los
-   secretos `FIREBASE_*` solo hacen falta si quieres apuntar a otro
-   proyecto de Firebase.)
+   secretos `GOOGLE_ANDROID_CLIENT_ID`, `STRAVA_CLIENT_ID`,
+   `STRAVA_CLIENT_SECRET` y `ANDROID_KEYSTORE_BASE64`. (La configuración
+   de Firebase y el ID de cliente web de Google del proyecto
+   `rcv-tracker` ya van incluidos en el código; sus secretos solo hacen
+   falta para apuntar a otro proyecto.)
 2. Pestaña **Actions → Compilar APK de Android → Run workflow**.
 3. Al terminar, descarga la APK desde **Artifacts** e instálala en el móvil.
 

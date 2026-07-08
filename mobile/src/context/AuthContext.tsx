@@ -40,7 +40,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const webClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
+  // IDs de cliente OAuth del proyecto rcv-tracker. Son identificadores
+  // públicos (van dentro de la app y en las URLs de login); se pueden
+  // sobrescribir con variables de entorno para otro proyecto.
+  const webClientId =
+    process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ??
+    "998609267174-e53ps481lgiglsb48oni5kno01ael4fr.apps.googleusercontent.com";
   const androidClientId = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID;
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
