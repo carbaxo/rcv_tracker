@@ -40,7 +40,11 @@ sincroniza en tiempo real vía Firestore.
   > Play (integrada en el sistema desde Android 14). Funciona en la APK /
   > dev build, no en Expo Go.
 
-- **🔗 Importación desde Strava (API oficial)** — conecta tu cuenta con OAuth
+- **🔗 Importación desde Strava (API oficial)** — ⚠️ desde el 30 de junio de
+  2026 Strava exige una suscripción de pago activa para usar su API; sin
+  ella, usa la importación GPX de la web (Perfil → Importar archivos GPX) o
+  la vía del reloj, que cubren lo mismo gratis. Si tienes suscripción:
+  conecta tu cuenta con OAuth
   e importa hasta tus últimas 200 actividades con distancia, tiempo,
   frecuencia cardiaca, desnivel y el trazado de la ruta. Las actividades ya
   importadas se detectan por su ID y no se duplican. Los tokens se guardan

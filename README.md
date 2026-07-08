@@ -35,8 +35,12 @@ El proyecto tiene dos aplicaciones que comparten cuenta y datos:
 - **📈 Progreso** — gráficas de volumen semanal, evolución de peso y 1RM
   estimado por ejercicio, y kilómetros de cardio.
 - **🗺️ Rutas sobre mapa real** — las actividades con GPS (grabadas con la
-  app Android o importadas de Strava) muestran su recorrido sobre un mapa de
+  app Android o importadas) muestran su recorrido sobre un mapa de
   OpenStreetMap, sin claves de API.
+- **📁 Importación de archivos GPX** — en Perfil: sube uno o varios `.gpx`
+  (exportación gratuita de Strava, Garmin, cualquier reloj) y se importan
+  con ruta, distancia, tiempo, pulsaciones y desnivel, sin duplicados. No
+  requiere la API de Strava (que desde junio de 2026 exige suscripción).
 - **🏆 Récords personales** — tus mejores marcas se detectan automáticamente.
 - **🎯 Objetivos** — metas de distancia mensual, sesiones semanales, peso en
   un ejercicio o peso corporal, con barra de progreso en el panel.

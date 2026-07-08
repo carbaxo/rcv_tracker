@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import AppShell from "@/components/AppShell";
+import GpxImport from "@/components/GpxImport";
 import { useAuth } from "@/context/AuthContext";
 import {
   addBodyMetric,
@@ -128,6 +129,8 @@ function Perfil() {
           </ul>
         )}
       </div>
+
+      <GpxImport />
 
       <div className="card space-y-3">
         <h2 className="font-semibold">📦 Tus datos</h2>

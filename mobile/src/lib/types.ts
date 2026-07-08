@@ -60,5 +60,6 @@ export interface Workout {
   volumeKg?: number;
   stravaId?: number; // presente si la actividad se importó de Strava
   healthConnectId?: string; // presente si vino del reloj vía Health Connect
+  gpxId?: string; // presente si se importó de un archivo GPX (en la web)
   createdAt: number;
 }

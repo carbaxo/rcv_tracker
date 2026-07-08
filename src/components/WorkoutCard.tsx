@@ -36,7 +36,9 @@ export default function WorkoutCard({ workout }: { workout: Workout }) {
                 ? " · 🔗 Strava"
                 : workout.healthConnectId
                   ? " · ⌚ Reloj"
-                  : ""}
+                  : workout.gpxId
+                    ? " · 📁 GPX"
+                    : ""}
             </p>
           </div>
         </div>

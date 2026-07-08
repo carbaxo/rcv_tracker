@@ -94,6 +94,8 @@ export interface Workout {
   stravaId?: number;
   // ID de la sesión si se importó del reloj vía Health Connect (app Android)
   healthConnectId?: string;
+  // ID estable si se importó de un archivo GPX (evita duplicados)
+  gpxId?: string;
   createdAt: number;
 }
 
