@@ -46,7 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const webClientId =
     process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ??
     "998609267174-e53ps481lgiglsb48oni5kno01ael4fr.apps.googleusercontent.com";
-  const androidClientId = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID;
+  const androidClientId =
+    process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID ??
+    "998609267174-i4lnaso2jjbm27257vn5knjr53vkqbd7.apps.googleusercontent.com";
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: webClientId,
