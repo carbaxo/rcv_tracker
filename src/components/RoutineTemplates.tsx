@@ -138,14 +138,9 @@ export default function RoutineTemplates({ onAdded }: { onAdded?: () => void }) 
       </div>
 
       {preview && (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-4"
-          onClick={close}
-        >
-          <div
-            className="flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-base-900 sm:rounded-3xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="sheet-backdrop" onClick={close}>
+          <div className="sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="grabber" />
             {swap ? (
               /* ---- Selector de ejercicio (cambiar o añadir) ---- */
               <>
