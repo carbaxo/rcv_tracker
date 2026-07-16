@@ -126,7 +126,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
 
         <main
           key={pathname}
-          className="flex-1 animate-rise px-4 py-6 pb-28 md:px-8 md:pb-8"
+          className="flex-1 animate-fade px-4 py-6 pb-28 md:px-8 md:pb-8"
         >
           {children}
         </main>
