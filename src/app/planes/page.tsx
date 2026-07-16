@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import AppShell from "@/components/AppShell";
 import PlanEditor from "@/components/PlanEditor";
+import RoutineTemplates from "@/components/RoutineTemplates";
 import { useAuth } from "@/context/AuthContext";
 import { deletePlan, updatePlan, usePlans } from "@/lib/db";
 import type { Plan } from "@/lib/types";
@@ -20,6 +21,7 @@ function Planes() {
   const { user } = useAuth();
   const { data: plans, loading } = usePlans();
   const [editing, setEditing] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
 
   const setActive = async (plan: Plan) => {
     if (!user || !plan.id) return;
@@ -40,25 +42,58 @@ function Planes() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">Planes de entrenamiento</h1>
-        <button onClick={() => setEditing((e) => !e)} className="btn-primary">
-          {editing ? "Cancelar" : "+ Nuevo plan"}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              setShowTemplates((t) => !t);
+              setEditing(false);
+            }}
+            className="btn-secondary"
+          >
+            {showTemplates ? "Ocultar" : "📋 Plantillas"}
+          </button>
+          <button
+            onClick={() => {
+              setEditing((e) => !e);
+              setShowTemplates(false);
+            }}
+            className="btn-primary"
+          >
+            {editing ? "Cancelar" : "+ Nuevo plan"}
+          </button>
+        </div>
       </div>
 
       {editing && <PlanEditor onSaved={() => setEditing(false)} />}
 
+      {showTemplates && (
+        <div className="space-y-3">
+          <p className="text-sm text-slate-400">
+            Rutinas prediseñadas listas para usar. Añádelas a tus planes y edítalas
+            a tu gusto.
+          </p>
+          <RoutineTemplates onAdded={() => setShowTemplates(false)} />
+        </div>
+      )}
+
       {loading ? (
         <p className="text-sm text-slate-400">Cargando…</p>
-      ) : plans.length === 0 && !editing ? (
+      ) : plans.length === 0 && !editing && !showTemplates ? (
         <div className="card text-center">
           <p className="text-4xl">🗓️</p>
           <p className="mt-2 font-medium">Aún no tienes ningún plan</p>
           <p className="mt-1 text-sm text-slate-400">
-            Crea tu rutina semanal: días de gimnasio, cardio y descanso. Después
-            podrás iniciar cada sesión con un toque.
+            Empieza con una rutina prediseñada o crea la tuya: días de gimnasio,
+            cardio y descanso. Después podrás iniciar cada sesión con un toque.
           </p>
+          <button
+            onClick={() => setShowTemplates(true)}
+            className="btn-primary mx-auto mt-4"
+          >
+            📋 Ver plantillas de rutinas
+          </button>
         </div>
       ) : (
         plans.map((plan) => (
