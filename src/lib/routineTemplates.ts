@@ -2,8 +2,8 @@ import type { PlanDay } from "./types";
 
 // Plantillas de rutinas listas para usar. El usuario las añade a "Planes" con
 // un toque y luego puede editarlas o iniciar cada día como sesión.
-// Los ejercicios usan los nombres de la biblioteca en español, así que el
-// autocompletado y la búsqueda los reconocen.
+// Los ejercicios usan nombres EXACTOS de la base de datos (hasaneyldrm/
+// exercises-dataset), así que la búsqueda y el autocompletado los reconocen.
 export interface RoutineTemplate {
   id: string;
   name: string;
@@ -14,55 +14,139 @@ export interface RoutineTemplate {
   days: PlanDay[];
 }
 
+const REST_HEAVY = 180;
 const REST_COMPOUND = 120;
 const REST_ISOLATION = 75;
+const REST_CORE = 60;
+
+const rest = (name: string) => ({ name, type: "descanso" as const, exercises: [] });
 
 export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   {
+    id: "inicio-2",
+    name: "Iniciación · 2 días",
+    emoji: "🌱",
+    level: "Principiante",
+    daysPerWeek: 2,
+    description:
+      "Dos sesiones de cuerpo completo a la semana con los movimientos básicos. Perfecta para empezar sin agobios y crear el hábito.",
+    days: [
+      {
+        name: "Día 1 · Cuerpo completo A",
+        focus: "básicos",
+        type: "gym",
+        exercises: [
+          { name: "Smith leg press", sets: 3, reps: "10-12", restSec: REST_COMPOUND },
+          { name: "Dumbbell bench press", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Cable bar lateral pulldown", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Dumbbell lateral raise", sets: 2, reps: "12-15", restSec: REST_CORE },
+          { name: "Tuck crunch", sets: 3, reps: "12-15", restSec: REST_CORE },
+        ],
+      },
+      rest("Día 2 · Descanso"),
+      rest("Día 3 · Descanso"),
+      {
+        name: "Día 4 · Cuerpo completo B",
+        focus: "básicos",
+        type: "gym",
+        exercises: [
+          { name: "Barbell full squat", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Barbell incline bench press", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Cable seated row", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Dumbbell biceps curl", sets: 2, reps: "12-15", restSec: REST_CORE },
+          { name: "Russian twist", sets: 3, reps: "20", restSec: REST_CORE },
+        ],
+      },
+    ],
+  },
+  {
     id: "fullbody-3",
     name: "Cuerpo completo · 3 días",
-    emoji: "🌱",
+    emoji: "🔰",
     level: "Principiante",
     daysPerWeek: 3,
     description:
-      "Tres sesiones de cuerpo completo a la semana (lunes, miércoles, viernes). Ideal para empezar: trabaja todos los grupos con los básicos.",
+      "Tres sesiones de cuerpo completo (lunes, miércoles, viernes). Trabaja todos los grupos con los básicos: ideal para progresar rápido al principio.",
     days: [
       {
         name: "Día 1 · Cuerpo completo A",
         focus: "empuje + pierna",
         type: "gym",
         exercises: [
-          { name: "Sentadilla", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
-          { name: "Press banca", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
-          { name: "Remo con barra", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
-          { name: "Press militar", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Plancha", sets: 3, reps: "30-45s", restSec: 60 },
+          { name: "Barbell full squat", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Barbell bench press", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Barbell bent over row", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Barbell seated overhead press", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Tuck crunch", sets: 3, reps: "15-20", restSec: REST_CORE },
         ],
       },
-      { name: "Día 2 · Descanso", type: "descanso", exercises: [] },
+      rest("Día 2 · Descanso"),
       {
         name: "Día 3 · Cuerpo completo B",
         focus: "tracción + pierna",
         type: "gym",
         exercises: [
-          { name: "Peso muerto", sets: 3, reps: "6-8", restSec: REST_COMPOUND },
-          { name: "Jalón al pecho", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Press con mancuernas", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Zancadas", sets: 3, reps: "10 por pierna", restSec: REST_ISOLATION },
-          { name: "Crunch abdominal", sets: 3, reps: "15-20", restSec: 60 },
+          { name: "Barbell deadlift", sets: 3, reps: "6-8", restSec: REST_COMPOUND },
+          { name: "Cable bar lateral pulldown", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Dumbbell bench press", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Dumbbell lunge", sets: 3, reps: "10 por pierna", restSec: REST_ISOLATION },
+          { name: "Hanging leg raise", sets: 3, reps: "10-15", restSec: REST_CORE },
         ],
       },
-      { name: "Día 4 · Descanso", type: "descanso", exercises: [] },
+      rest("Día 4 · Descanso"),
       {
         name: "Día 5 · Cuerpo completo C",
         focus: "general",
         type: "gym",
         exercises: [
-          { name: "Prensa de piernas", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
-          { name: "Press banca inclinado", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Remo en polea baja", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
-          { name: "Elevaciones laterales", sets: 3, reps: "12-15", restSec: 60 },
-          { name: "Curl con mancuernas", sets: 2, reps: "12-15", restSec: 60 },
+          { name: "Smith leg press", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Barbell incline bench press", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Cable seated row", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Dumbbell lateral raise", sets: 3, reps: "12-15", restSec: REST_CORE },
+          { name: "Dumbbell biceps curl", sets: 2, reps: "12-15", restSec: REST_CORE },
+        ],
+      },
+    ],
+  },
+  {
+    id: "fuerza-5x5",
+    name: "Fuerza 5×5 · 3 días",
+    emoji: "🏋️",
+    level: "Intermedio",
+    daysPerWeek: 3,
+    description:
+      "Rutina de fuerza estilo 5×5 alternando dos sesiones (A y B). Pocos ejercicios, mucho peso y progresión lineal en los grandes básicos.",
+    days: [
+      {
+        name: "Día 1 · Fuerza A",
+        focus: "sentadilla",
+        type: "gym",
+        exercises: [
+          { name: "Barbell full squat", sets: 5, reps: "5", restSec: REST_HEAVY },
+          { name: "Barbell bench press", sets: 5, reps: "5", restSec: REST_HEAVY },
+          { name: "Barbell bent over row", sets: 5, reps: "5", restSec: REST_COMPOUND },
+        ],
+      },
+      rest("Día 2 · Descanso"),
+      {
+        name: "Día 3 · Fuerza B",
+        focus: "peso muerto",
+        type: "gym",
+        exercises: [
+          { name: "Barbell full squat", sets: 5, reps: "5", restSec: REST_HEAVY },
+          { name: "Barbell seated overhead press", sets: 5, reps: "5", restSec: REST_HEAVY },
+          { name: "Barbell deadlift", sets: 1, reps: "5", restSec: REST_HEAVY },
+        ],
+      },
+      rest("Día 4 · Descanso"),
+      {
+        name: "Día 5 · Fuerza A",
+        focus: "sentadilla",
+        type: "gym",
+        exercises: [
+          { name: "Barbell full squat", sets: 5, reps: "5", restSec: REST_HEAVY },
+          { name: "Barbell bench press", sets: 5, reps: "5", restSec: REST_HEAVY },
+          { name: "Barbell bent over row", sets: 5, reps: "5", restSec: REST_COMPOUND },
         ],
       },
     ],
@@ -74,18 +158,18 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
     level: "Intermedio",
     daysPerWeek: 4,
     description:
-      "Cuatro días alternando torso y pierna (2 de cada). Buen equilibrio entre volumen y recuperación para progresar.",
+      "Cuatro días alternando torso y pierna (2 de cada). Buen equilibrio entre volumen y recuperación para seguir progresando.",
     days: [
       {
         name: "Día 1 · Torso A",
         focus: "empuje dominante",
         type: "gym",
         exercises: [
-          { name: "Press banca", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
-          { name: "Remo con barra", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
-          { name: "Press militar", sets: 3, reps: "8-10", restSec: REST_ISOLATION },
-          { name: "Jalón al pecho", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Elevaciones laterales", sets: 3, reps: "12-15", restSec: 60 },
+          { name: "Barbell bench press", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
+          { name: "Barbell bent over row", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Barbell seated overhead press", sets: 3, reps: "8-10", restSec: REST_ISOLATION },
+          { name: "Cable bar lateral pulldown", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Dumbbell lateral raise", sets: 3, reps: "12-15", restSec: REST_CORE },
         ],
       },
       {
@@ -93,25 +177,25 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "cuádriceps dominante",
         type: "gym",
         exercises: [
-          { name: "Sentadilla", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
-          { name: "Prensa de piernas", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Curl femoral", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
-          { name: "Elevación de gemelos", sets: 4, reps: "15-20", restSec: 60 },
-          { name: "Plancha", sets: 3, reps: "45s", restSec: 60 },
+          { name: "Barbell full squat", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
+          { name: "Smith leg press", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Lever lying leg curl", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Cable standing calf raise", sets: 4, reps: "15-20", restSec: REST_CORE },
+          { name: "Tuck crunch", sets: 3, reps: "15-20", restSec: REST_CORE },
         ],
       },
-      { name: "Día 3 · Descanso", type: "descanso", exercises: [] },
+      rest("Día 3 · Descanso"),
       {
         name: "Día 4 · Torso B",
         focus: "tracción dominante",
         type: "gym",
         exercises: [
-          { name: "Dominadas", sets: 4, reps: "máx", restSec: REST_COMPOUND },
-          { name: "Press con mancuernas", sets: 4, reps: "8-10", restSec: REST_ISOLATION },
-          { name: "Remo con mancuerna", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Face pull", sets: 3, reps: "15-20", restSec: 60 },
-          { name: "Curl con barra", sets: 3, reps: "10-12", restSec: 60 },
-          { name: "Extensión de tríceps en polea", sets: 3, reps: "12-15", restSec: 60 },
+          { name: "Chin-up", sets: 4, reps: "máx", restSec: REST_COMPOUND },
+          { name: "Dumbbell bench press", sets: 4, reps: "8-10", restSec: REST_ISOLATION },
+          { name: "Dumbbell bent over row", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Cable rear delt row (with rope)", sets: 3, reps: "15-20", restSec: REST_CORE },
+          { name: "Barbell curl", sets: 3, reps: "10-12", restSec: REST_CORE },
+          { name: "Cable pushdown", sets: 3, reps: "12-15", restSec: REST_CORE },
         ],
       },
       {
@@ -119,11 +203,56 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "glúteo/femoral dominante",
         type: "gym",
         exercises: [
-          { name: "Peso muerto rumano", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
-          { name: "Hip thrust", sets: 4, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Zancadas", sets: 3, reps: "12 por pierna", restSec: REST_ISOLATION },
-          { name: "Extensión de cuádriceps", sets: 3, reps: "15", restSec: 60 },
-          { name: "Elevación de gemelos", sets: 4, reps: "15-20", restSec: 60 },
+          { name: "Barbell romanian deadlift", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Barbell glute bridge", sets: 4, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Barbell lunge", sets: 3, reps: "12 por pierna", restSec: REST_ISOLATION },
+          { name: "Lever leg extension", sets: 3, reps: "15", restSec: REST_CORE },
+          { name: "Cable standing calf raise", sets: 4, reps: "15-20", restSec: REST_CORE },
+        ],
+      },
+    ],
+  },
+  {
+    id: "gluteo-pierna-3",
+    name: "Glúteo y pierna · 3 días",
+    emoji: "🍑",
+    level: "Intermedio",
+    daysPerWeek: 3,
+    description:
+      "Tres días centrados en el tren inferior: glúteo, cuádriceps y femoral. Con algo de core al final de cada sesión.",
+    days: [
+      {
+        name: "Día 1 · Glúteo",
+        focus: "glúteo dominante",
+        type: "gym",
+        exercises: [
+          { name: "Barbell glute bridge", sets: 4, reps: "8-12", restSec: REST_COMPOUND },
+          { name: "Barbell romanian deadlift", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Barbell lunge", sets: 3, reps: "12 por pierna", restSec: REST_ISOLATION },
+          { name: "Cable standing calf raise", sets: 3, reps: "15-20", restSec: REST_CORE },
+        ],
+      },
+      {
+        name: "Día 2 · Cuádriceps",
+        focus: "cuádriceps dominante",
+        type: "gym",
+        exercises: [
+          { name: "Barbell full squat", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
+          { name: "Smith leg press", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Lever leg extension", sets: 3, reps: "15", restSec: REST_CORE },
+          { name: "Dumbbell lunge", sets: 3, reps: "10 por pierna", restSec: REST_ISOLATION },
+        ],
+      },
+      rest("Día 3 · Descanso"),
+      {
+        name: "Día 4 · Femoral y glúteo",
+        focus: "cadena posterior",
+        type: "gym",
+        exercises: [
+          { name: "Barbell deadlift", sets: 4, reps: "5-6", restSec: REST_HEAVY },
+          { name: "Lever lying leg curl", sets: 4, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Barbell glute bridge", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Hanging leg raise", sets: 3, reps: "10-15", restSec: REST_CORE },
         ],
       },
     ],
@@ -142,11 +271,11 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "pecho · hombro · tríceps",
         type: "gym",
         exercises: [
-          { name: "Press banca", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
-          { name: "Press militar", sets: 3, reps: "8-10", restSec: REST_ISOLATION },
-          { name: "Press banca inclinado", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Elevaciones laterales", sets: 4, reps: "12-15", restSec: 60 },
-          { name: "Extensión de tríceps en polea", sets: 3, reps: "12-15", restSec: 60 },
+          { name: "Barbell bench press", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
+          { name: "Barbell seated overhead press", sets: 3, reps: "8-10", restSec: REST_ISOLATION },
+          { name: "Barbell incline bench press", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Dumbbell lateral raise", sets: 4, reps: "12-15", restSec: REST_CORE },
+          { name: "Cable pushdown", sets: 3, reps: "12-15", restSec: REST_CORE },
         ],
       },
       {
@@ -154,12 +283,12 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "espalda · bíceps",
         type: "gym",
         exercises: [
-          { name: "Dominadas", sets: 4, reps: "máx", restSec: REST_COMPOUND },
-          { name: "Remo con barra", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
-          { name: "Jalón al pecho", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Face pull", sets: 3, reps: "15-20", restSec: 60 },
-          { name: "Curl con barra", sets: 3, reps: "10-12", restSec: 60 },
-          { name: "Curl martillo", sets: 3, reps: "12-15", restSec: 60 },
+          { name: "Chin-up", sets: 4, reps: "máx", restSec: REST_COMPOUND },
+          { name: "Barbell bent over row", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Cable bar lateral pulldown", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Cable rear delt row (with rope)", sets: 3, reps: "15-20", restSec: REST_CORE },
+          { name: "Barbell curl", sets: 3, reps: "10-12", restSec: REST_CORE },
+          { name: "Dumbbell hammer curl", sets: 3, reps: "12-15", restSec: REST_CORE },
         ],
       },
       {
@@ -167,11 +296,11 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "cuádriceps · femoral · glúteo",
         type: "gym",
         exercises: [
-          { name: "Sentadilla", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
-          { name: "Peso muerto rumano", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
-          { name: "Prensa de piernas", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
-          { name: "Curl femoral", sets: 3, reps: "12-15", restSec: 60 },
-          { name: "Elevación de gemelos", sets: 4, reps: "15-20", restSec: 60 },
+          { name: "Barbell full squat", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
+          { name: "Barbell romanian deadlift", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Smith leg press", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Lever lying leg curl", sets: 3, reps: "12-15", restSec: REST_CORE },
+          { name: "Cable standing calf raise", sets: 4, reps: "15-20", restSec: REST_CORE },
         ],
       },
       {
@@ -179,11 +308,11 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "pecho · hombro · tríceps",
         type: "gym",
         exercises: [
-          { name: "Press con mancuernas", sets: 4, reps: "8-10", restSec: REST_ISOLATION },
-          { name: "Press de hombro con mancuernas", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Cruce en poleas", sets: 3, reps: "12-15", restSec: 60 },
-          { name: "Elevaciones laterales", sets: 4, reps: "15", restSec: 60 },
-          { name: "Press francés", sets: 3, reps: "10-12", restSec: 60 },
+          { name: "Dumbbell bench press", sets: 4, reps: "8-10", restSec: REST_ISOLATION },
+          { name: "Dumbbell standing overhead press", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Cable cross-over variation", sets: 3, reps: "12-15", restSec: REST_CORE },
+          { name: "Dumbbell lateral raise", sets: 4, reps: "15", restSec: REST_CORE },
+          { name: "Barbell lying triceps extension", sets: 3, reps: "10-12", restSec: REST_CORE },
         ],
       },
       {
@@ -191,11 +320,11 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "espalda · bíceps",
         type: "gym",
         exercises: [
-          { name: "Remo con mancuerna", sets: 4, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Remo en polea baja", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
-          { name: "Jalón al pecho", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
-          { name: "Pájaros (deltoide posterior)", sets: 3, reps: "15-20", restSec: 60 },
-          { name: "Curl con mancuernas", sets: 3, reps: "12-15", restSec: 60 },
+          { name: "Dumbbell bent over row", sets: 4, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Cable seated row", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Cable bar lateral pulldown", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Dumbbell rear lateral raise", sets: 3, reps: "15-20", restSec: REST_CORE },
+          { name: "Dumbbell biceps curl", sets: 3, reps: "12-15", restSec: REST_CORE },
         ],
       },
       {
@@ -203,11 +332,144 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "cuádriceps · glúteo",
         type: "gym",
         exercises: [
-          { name: "Peso muerto", sets: 4, reps: "5-6", restSec: REST_COMPOUND },
-          { name: "Hip thrust", sets: 4, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Zancadas", sets: 3, reps: "12 por pierna", restSec: REST_ISOLATION },
-          { name: "Extensión de cuádriceps", sets: 3, reps: "15", restSec: 60 },
-          { name: "Rueda abdominal", sets: 3, reps: "10-12", restSec: 60 },
+          { name: "Barbell deadlift", sets: 4, reps: "5-6", restSec: REST_HEAVY },
+          { name: "Barbell glute bridge", sets: 4, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Barbell lunge", sets: 3, reps: "12 por pierna", restSec: REST_ISOLATION },
+          { name: "Lever leg extension", sets: 3, reps: "15", restSec: REST_CORE },
+          { name: "Wheel rollerout", sets: 3, reps: "10-12", restSec: REST_CORE },
+        ],
+      },
+    ],
+  },
+  {
+    id: "arnold-6",
+    name: "Arnold split · 6 días",
+    emoji: "💪",
+    level: "Avanzado",
+    daysPerWeek: 6,
+    description:
+      "Clásico split de Arnold: pecho+espalda, hombro+brazos y pierna, dos veces por semana. Mucho volumen orientado a hipertrofia.",
+    days: [
+      {
+        name: "Día 1 · Pecho + Espalda",
+        type: "gym",
+        exercises: [
+          { name: "Barbell bench press", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Barbell incline bench press", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Chin-up", sets: 4, reps: "máx", restSec: REST_COMPOUND },
+          { name: "Barbell bent over row", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Dumbbell fly", sets: 3, reps: "12-15", restSec: REST_CORE },
+        ],
+      },
+      {
+        name: "Día 2 · Hombro + Brazos",
+        type: "gym",
+        exercises: [
+          { name: "Barbell seated overhead press", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Dumbbell lateral raise", sets: 4, reps: "12-15", restSec: REST_CORE },
+          { name: "Barbell curl", sets: 3, reps: "10-12", restSec: REST_CORE },
+          { name: "Barbell lying triceps extension", sets: 3, reps: "10-12", restSec: REST_CORE },
+          { name: "Dumbbell hammer curl", sets: 3, reps: "12-15", restSec: REST_CORE },
+          { name: "Cable pushdown", sets: 3, reps: "12-15", restSec: REST_CORE },
+        ],
+      },
+      {
+        name: "Día 3 · Pierna",
+        type: "gym",
+        exercises: [
+          { name: "Barbell full squat", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
+          { name: "Lever leg extension", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Lever lying leg curl", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Cable standing calf raise", sets: 4, reps: "15-20", restSec: REST_CORE },
+        ],
+      },
+      {
+        name: "Día 4 · Pecho + Espalda",
+        type: "gym",
+        exercises: [
+          { name: "Dumbbell bench press", sets: 4, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Cable cross-over variation", sets: 3, reps: "12-15", restSec: REST_CORE },
+          { name: "Cable bar lateral pulldown", sets: 4, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Cable seated row", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Dumbbell rear lateral raise", sets: 3, reps: "15-20", restSec: REST_CORE },
+        ],
+      },
+      {
+        name: "Día 5 · Hombro + Brazos",
+        type: "gym",
+        exercises: [
+          { name: "Barbell upright row", sets: 4, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Dumbbell lateral raise", sets: 4, reps: "15", restSec: REST_CORE },
+          { name: "Dumbbell biceps curl", sets: 3, reps: "12-15", restSec: REST_CORE },
+          { name: "Three bench dip", sets: 3, reps: "máx", restSec: REST_CORE },
+          { name: "Cable pushdown", sets: 3, reps: "12-15", restSec: REST_CORE },
+        ],
+      },
+      {
+        name: "Día 6 · Pierna",
+        type: "gym",
+        exercises: [
+          { name: "Barbell romanian deadlift", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Smith leg press", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Barbell lunge", sets: 3, reps: "12 por pierna", restSec: REST_ISOLATION },
+          { name: "Cable standing calf raise", sets: 4, reps: "15-20", restSec: REST_CORE },
+          { name: "Hanging leg raise", sets: 3, reps: "10-15", restSec: REST_CORE },
+        ],
+      },
+    ],
+  },
+  {
+    id: "powerbuilding-4",
+    name: "Powerbuilding · 4 días",
+    emoji: "🏆",
+    level: "Avanzado",
+    daysPerWeek: 4,
+    description:
+      "Combina fuerza en los grandes básicos (series pesadas) con accesorios de hipertrofia. Para ganar fuerza y músculo a la vez.",
+    days: [
+      {
+        name: "Día 1 · Pecho pesado",
+        focus: "empuje",
+        type: "gym",
+        exercises: [
+          { name: "Barbell bench press", sets: 5, reps: "3-5", restSec: REST_HEAVY },
+          { name: "Barbell incline bench press", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Dumbbell fly", sets: 3, reps: "12-15", restSec: REST_CORE },
+          { name: "Cable pushdown", sets: 3, reps: "12-15", restSec: REST_CORE },
+        ],
+      },
+      {
+        name: "Día 2 · Espalda pesada",
+        focus: "tracción",
+        type: "gym",
+        exercises: [
+          { name: "Barbell deadlift", sets: 5, reps: "3-5", restSec: REST_HEAVY },
+          { name: "Barbell bent over row", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Cable bar lateral pulldown", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Barbell curl", sets: 3, reps: "10-12", restSec: REST_CORE },
+        ],
+      },
+      rest("Día 3 · Descanso"),
+      {
+        name: "Día 4 · Pierna pesada",
+        focus: "tren inferior",
+        type: "gym",
+        exercises: [
+          { name: "Barbell full squat", sets: 5, reps: "3-5", restSec: REST_HEAVY },
+          { name: "Barbell romanian deadlift", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Lever leg extension", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Cable standing calf raise", sets: 4, reps: "15-20", restSec: REST_CORE },
+        ],
+      },
+      {
+        name: "Día 5 · Hombro y brazos",
+        focus: "accesorios",
+        type: "gym",
+        exercises: [
+          { name: "Barbell seated overhead press", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
+          { name: "Dumbbell lateral raise", sets: 4, reps: "12-15", restSec: REST_CORE },
+          { name: "Dumbbell hammer curl", sets: 3, reps: "12-15", restSec: REST_CORE },
+          { name: "Barbell lying triceps extension", sets: 3, reps: "10-12", restSec: REST_CORE },
         ],
       },
     ],
@@ -226,10 +488,10 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "empuje + tracción",
         type: "gym",
         exercises: [
-          { name: "Press banca", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
-          { name: "Remo con barra", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
-          { name: "Press militar", sets: 3, reps: "8-10", restSec: REST_ISOLATION },
-          { name: "Jalón al pecho", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Barbell bench press", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
+          { name: "Barbell bent over row", sets: 4, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Barbell seated overhead press", sets: 3, reps: "8-10", restSec: REST_ISOLATION },
+          { name: "Cable bar lateral pulldown", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
         ],
       },
       {
@@ -243,10 +505,10 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "tren inferior",
         type: "gym",
         exercises: [
-          { name: "Sentadilla", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
-          { name: "Peso muerto rumano", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
-          { name: "Prensa de piernas", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
-          { name: "Elevación de gemelos", sets: 4, reps: "15-20", restSec: 60 },
+          { name: "Barbell full squat", sets: 4, reps: "6-8", restSec: REST_COMPOUND },
+          { name: "Barbell romanian deadlift", sets: 3, reps: "8-10", restSec: REST_COMPOUND },
+          { name: "Smith leg press", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Cable standing calf raise", sets: 4, reps: "15-20", restSec: REST_CORE },
         ],
       },
       {
@@ -260,11 +522,11 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
         focus: "general + core",
         type: "gym",
         exercises: [
-          { name: "Dominadas", sets: 3, reps: "máx", restSec: REST_COMPOUND },
-          { name: "Press con mancuernas", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
-          { name: "Hip thrust", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
-          { name: "Plancha", sets: 3, reps: "45-60s", restSec: 60 },
-          { name: "Russian twist", sets: 3, reps: "20", restSec: 60 },
+          { name: "Chin-up", sets: 3, reps: "máx", restSec: REST_COMPOUND },
+          { name: "Dumbbell bench press", sets: 3, reps: "10-12", restSec: REST_ISOLATION },
+          { name: "Barbell glute bridge", sets: 3, reps: "12-15", restSec: REST_ISOLATION },
+          { name: "Russian twist", sets: 3, reps: "20", restSec: REST_CORE },
+          { name: "Hanging leg raise", sets: 3, reps: "10-15", restSec: REST_CORE },
         ],
       },
     ],
