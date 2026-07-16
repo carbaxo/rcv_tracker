@@ -152,7 +152,7 @@ function Ejercicios() {
           <button
             key={`${e.id ?? e.name}-${i}`}
             onClick={() => setDetail(e)}
-            className="card group !p-0 overflow-hidden text-left transition-colors hover:border-accent/50"
+            className="card press group !p-0 overflow-hidden text-left hover:border-accent/40"
           >
             <div className="relative aspect-square w-full overflow-hidden">
               <ExerciseImage
@@ -216,33 +216,29 @@ function ExerciseDetail({
       : [];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-4"
-      onClick={onClose}
-    >
-      <div
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-base-900 sm:rounded-3xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="relative">
-          <div className="aspect-square w-full overflow-hidden sm:aspect-video">
-            <ExerciseImage
-              media={exercise.media}
-              alt={exercise.name}
-              alwaysAnimate
-              className="h-full w-full"
-            />
+    <div className="sheet-backdrop" onClick={onClose}>
+      <div className="sheet" onClick={(e) => e.stopPropagation()}>
+        <div className="grabber" />
+        <div className="min-h-0 flex-1 overflow-y-auto scroll-momentum">
+          <div className="relative">
+            <div className="aspect-square w-full overflow-hidden sm:aspect-video">
+              <ExerciseImage
+                media={exercise.media}
+                alt={exercise.name}
+                alwaysAnimate
+                className="h-full w-full"
+              />
+            </div>
+            <button
+              onClick={onClose}
+              className="press absolute right-3 top-3 grid h-11 w-11 place-items-center rounded-full bg-black/50 text-lg text-white backdrop-blur"
+              aria-label="Cerrar"
+            >
+              ✕
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-black/50 text-lg text-white"
-            aria-label="Cerrar"
-          >
-            ✕
-          </button>
-        </div>
 
-        <div className="space-y-4 p-5">
+          <div className="space-y-4 p-5">
           <div>
             <h2 className="text-xl font-bold">{exercise.name}</h2>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -285,6 +281,7 @@ function ExerciseDetail({
               Eliminar ejercicio
             </button>
           )}
+          </div>
         </div>
       </div>
     </div>
