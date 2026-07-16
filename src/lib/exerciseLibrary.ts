@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Exercise, MuscleGroup } from "./types";
-import { EXERCISE_LIBRARY } from "./exercisesSeed";
 
 // Base de datos de ejercicios ilustrada (1.324 ejercicios con imágenes y GIFs).
 // Fuente: https://github.com/hasaneyldrm/exercises-dataset (© Gym Visual).
@@ -78,9 +77,9 @@ function loadDataset(): Promise<Exercise[]> {
   return inflight;
 }
 
-// Biblioteca completa = ejercicios curados en español (con nombres familiares)
-// + la base de datos ilustrada. Las pantallas la combinan con los ejercicios
-// personalizados del usuario (que vienen de Firestore por separado).
+// Biblioteca = base de datos ilustrada (hasaneyldrm/exercises-dataset). Las
+// pantallas la combinan con los ejercicios personalizados del usuario (que
+// vienen de Firestore por separado).
 export function useExerciseLibrary() {
   const [dataset, setDataset] = useState<Exercise[]>(cache ?? []);
   const [loading, setLoading] = useState(!cache);
@@ -102,10 +101,5 @@ export function useExerciseLibrary() {
     };
   }, []);
 
-  const library = useMemo<Exercise[]>(
-    () => [...EXERCISE_LIBRARY, ...dataset],
-    [dataset]
-  );
-
-  return { library, dataset, loading };
+  return { library: dataset, dataset, loading };
 }
