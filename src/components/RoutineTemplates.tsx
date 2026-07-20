@@ -3,7 +3,12 @@
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { addPlan } from "@/lib/db";
-import { ROUTINE_TEMPLATES, type RoutineTemplate } from "@/lib/routineTemplates";
+import {
+  ROUTINE_GROUPS,
+  ROUTINE_TEMPLATES,
+  type RoutineGroup,
+  type RoutineTemplate,
+} from "@/lib/routineTemplates";
 import type { PlanDay } from "@/lib/types";
 import ExerciseEditSheet from "./ExerciseEditSheet";
 import ExercisePicker from "./ExercisePicker";
@@ -24,6 +29,9 @@ export default function RoutineTemplates({ onAdded }: { onAdded?: () => void }) 
   const [editing, setEditing] = useState<{ di: number; ei: number } | null>(null);
   const [adding, setAdding] = useState<number | null>(null);
   const [addingId, setAddingId] = useState<string | null>(null);
+  const [group, setGroup] = useState<RoutineGroup>("gimnasio");
+
+  const shown = ROUTINE_TEMPLATES.filter((t) => t.group === group);
 
   const open = (tpl: RoutineTemplate) => {
     setPreview(tpl);
@@ -75,8 +83,24 @@ export default function RoutineTemplates({ onAdded }: { onAdded?: () => void }) 
 
   return (
     <div className="space-y-3">
+      <div className="flex gap-2">
+        {ROUTINE_GROUPS.map((g) => (
+          <button
+            key={g.value}
+            onClick={() => setGroup(g.value)}
+            className={`press flex-1 rounded-2xl border px-3 py-2.5 text-sm font-semibold transition ${
+              group === g.value
+                ? "border-accent/40 bg-accent/12 text-accent"
+                : "border-white/10 bg-base-800 text-slate-300"
+            }`}
+          >
+            {g.emoji} {g.label}
+          </button>
+        ))}
+      </div>
+
       <div className="grid gap-3 sm:grid-cols-2">
-        {ROUTINE_TEMPLATES.map((tpl) => (
+        {shown.map((tpl) => (
           <div key={tpl.id} className="card space-y-3">
             <div className="flex items-start gap-3">
               <span className="text-3xl">{tpl.emoji}</span>

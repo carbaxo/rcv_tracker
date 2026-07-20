@@ -4,10 +4,18 @@ import type { PlanDay } from "./types";
 // un toque y luego puede editarlas o iniciar cada día como sesión.
 // Los ejercicios usan nombres EXACTOS de la base de datos (hasaneyldrm/
 // exercises-dataset), así que la búsqueda y el autocompletado los reconocen.
+export type RoutineGroup = "gimnasio" | "casa";
+
+export const ROUTINE_GROUPS: { value: RoutineGroup; label: string; emoji: string }[] = [
+  { value: "gimnasio", label: "Gimnasio", emoji: "🏋️" },
+  { value: "casa", label: "Casa + cardio", emoji: "🏠" },
+];
+
 export interface RoutineTemplate {
   id: string;
   name: string;
   emoji: string;
+  group: RoutineGroup;
   level: "Principiante" | "Intermedio" | "Avanzado";
   daysPerWeek: number;
   description: string;
@@ -24,6 +32,7 @@ const rest = (name: string) => ({ name, type: "descanso" as const, exercises: []
 export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   {
     id: "inicio-2",
+    group: "gimnasio",
     name: "Iniciación · 2 días",
     emoji: "🌱",
     level: "Principiante",
@@ -61,6 +70,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "mancuernas-3",
+    group: "casa",
     name: "En casa con mancuernas · 3 días",
     emoji: "🏠",
     level: "Principiante",
@@ -111,6 +121,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "calistenia-3",
+    group: "casa",
     name: "Calistenia · 3 días",
     emoji: "🤸",
     level: "Intermedio",
@@ -161,6 +172,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "fullbody-3",
+    group: "gimnasio",
     name: "Cuerpo completo · 3 días",
     emoji: "🔰",
     level: "Principiante",
@@ -210,6 +222,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "fuerza-5x5",
+    group: "gimnasio",
     name: "Fuerza 5×5 · 3 días",
     emoji: "🏋️",
     level: "Intermedio",
@@ -253,6 +266,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "upper-lower-4",
+    group: "gimnasio",
     name: "Torso / Pierna · 4 días",
     emoji: "⚖️",
     level: "Intermedio",
@@ -314,6 +328,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "gluteo-pierna-3",
+    group: "gimnasio",
     name: "Glúteo y pierna · 3 días",
     emoji: "🍑",
     level: "Intermedio",
@@ -359,6 +374,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "ppl-6",
+    group: "gimnasio",
     name: "Push Pull Legs · 6 días",
     emoji: "🔥",
     level: "Avanzado",
@@ -443,6 +459,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "arnold-6",
+    group: "gimnasio",
     name: "Arnold split · 6 días",
     emoji: "💪",
     level: "Avanzado",
@@ -520,6 +537,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "powerbuilding-4",
+    group: "gimnasio",
     name: "Powerbuilding · 4 días",
     emoji: "🏆",
     level: "Avanzado",
@@ -576,6 +594,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "core-abs-3",
+    group: "casa",
     name: "Abdomen y core · 3 días",
     emoji: "🎯",
     level: "Principiante",
@@ -619,6 +638,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "brazos-2",
+    group: "gimnasio",
     name: "Bíceps y tríceps · 2 días",
     emoji: "💥",
     level: "Intermedio",
@@ -656,6 +676,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "quema-grasa-4",
+    group: "gimnasio",
     name: "Quema grasa · 4 días",
     emoji: "⚡",
     level: "Intermedio",
@@ -701,6 +722,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
   },
   {
     id: "gym-cardio-5",
+    group: "gimnasio",
     name: "Fuerza + cardio · 5 días",
     emoji: "🏃",
     level: "Intermedio",
@@ -753,6 +775,148 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
           { name: "Russian twist", sets: 3, reps: "20", restSec: REST_CORE },
           { name: "Hanging leg raise", sets: 3, reps: "10-15", restSec: REST_CORE },
         ],
+      },
+    ],
+  },
+  {
+    id: "casa-fullbody-bw-3",
+    group: "casa",
+    name: "Cuerpo completo en casa · 3 días",
+    emoji: "🏡",
+    level: "Principiante",
+    daysPerWeek: 3,
+    description:
+      "Tres sesiones de cuerpo completo solo con el peso corporal (como mucho una silla para los fondos). Sin gimnasio ni material.",
+    days: [
+      {
+        name: "Día 1 · Cuerpo completo A",
+        type: "gym",
+        exercises: [
+          { name: "Push-up", sets: 4, reps: "máx", restSec: REST_ISOLATION },
+          { name: "Split squats", sets: 3, reps: "12 por pierna", restSec: REST_ISOLATION },
+          { name: "Low glute bridge on floor", sets: 3, reps: "15-20", restSec: REST_CORE },
+          { name: "Superman push-up", sets: 3, reps: "12", restSec: REST_CORE },
+          { name: "Reverse crunch", sets: 3, reps: "15-20", restSec: REST_CORE },
+        ],
+      },
+      rest("Día 2 · Descanso"),
+      {
+        name: "Día 3 · Cuerpo completo B",
+        type: "gym",
+        exercises: [
+          { name: "Walking lunge", sets: 3, reps: "20 pasos", restSec: REST_ISOLATION },
+          { name: "Three bench dip", sets: 3, reps: "máx", restSec: REST_ISOLATION },
+          { name: "Jump squat", sets: 3, reps: "15", restSec: REST_CORE },
+          { name: "Mountain climber", sets: 3, reps: "40s", restSec: REST_CORE },
+          { name: "Tuck crunch", sets: 3, reps: "15-20", restSec: REST_CORE },
+        ],
+      },
+      rest("Día 4 · Descanso"),
+      {
+        name: "Día 5 · Cuerpo completo C",
+        type: "gym",
+        exercises: [
+          { name: "Push-up", sets: 3, reps: "máx", restSec: REST_ISOLATION },
+          { name: "Split squats", sets: 3, reps: "12 por pierna", restSec: REST_ISOLATION },
+          { name: "Low glute bridge on floor", sets: 3, reps: "15-20", restSec: REST_CORE },
+          { name: "Flutter kicks", sets: 3, reps: "30s", restSec: REST_CORE },
+          { name: "Russian twist", sets: 3, reps: "20", restSec: REST_CORE },
+        ],
+      },
+    ],
+  },
+  {
+    id: "casa-hiit-3",
+    group: "casa",
+    name: "Cardio HIIT en casa · 3 días",
+    emoji: "💨",
+    level: "Intermedio",
+    daysPerWeek: 3,
+    description:
+      "Circuitos de alta intensidad sin material para quemar grasa y mejorar el fondo. Cada ejercicio son 40s a tope; repite las rondas indicadas.",
+    days: [
+      {
+        name: "Día 1 · Circuito HIIT A",
+        focus: "5 rondas · 40s por ejercicio",
+        type: "gym",
+        exercises: [
+          { name: "Burpee", sets: 5, reps: "40s", restSec: REST_CORE },
+          { name: "Mountain climber", sets: 5, reps: "40s", restSec: REST_CORE },
+          { name: "Jump squat", sets: 5, reps: "40s", restSec: REST_CORE },
+          { name: "High knee against wall", sets: 5, reps: "40s", restSec: REST_CORE },
+        ],
+      },
+      rest("Día 2 · Descanso"),
+      {
+        name: "Día 3 · Circuito HIIT B",
+        focus: "5 rondas · 40s por ejercicio",
+        type: "gym",
+        exercises: [
+          { name: "Push-up", sets: 5, reps: "40s", restSec: REST_CORE },
+          { name: "Split squats", sets: 5, reps: "40s", restSec: REST_CORE },
+          { name: "Burpee", sets: 5, reps: "30s", restSec: REST_CORE },
+          { name: "Reverse crunch", sets: 5, reps: "40s", restSec: REST_CORE },
+        ],
+      },
+      rest("Día 4 · Descanso"),
+      {
+        name: "Día 5 · Circuito HIIT C",
+        focus: "5 rondas · 40s por ejercicio",
+        type: "gym",
+        exercises: [
+          { name: "Jump squat", sets: 5, reps: "40s", restSec: REST_CORE },
+          { name: "Mountain climber", sets: 5, reps: "40s", restSec: REST_CORE },
+          { name: "Walking lunge", sets: 5, reps: "40s", restSec: REST_CORE },
+          { name: "Flutter kicks", sets: 5, reps: "40s", restSec: REST_CORE },
+        ],
+      },
+    ],
+  },
+  {
+    id: "casa-cardio-fuerza-4",
+    group: "casa",
+    name: "Cardio + fuerza en casa · 4 días",
+    emoji: "🏃‍♂️",
+    level: "Intermedio",
+    daysPerWeek: 4,
+    description:
+      "Dos días de fuerza con mancuernas/peso corporal y dos de cardio, todo en casa. Salud cardiovascular sin perder músculo.",
+    days: [
+      {
+        name: "Día 1 · Fuerza (mancuernas)",
+        focus: "cuerpo completo",
+        type: "gym",
+        exercises: [
+          { name: "Dumbbell goblet squat", sets: 3, reps: "12", restSec: REST_COMPOUND },
+          { name: "Push-up", sets: 3, reps: "máx", restSec: REST_ISOLATION },
+          { name: "Dumbbell bent over row", sets: 3, reps: "12", restSec: REST_ISOLATION },
+          { name: "Dumbbell standing overhead press", sets: 3, reps: "12", restSec: REST_ISOLATION },
+          { name: "Reverse crunch", sets: 3, reps: "15-20", restSec: REST_CORE },
+        ],
+      },
+      {
+        name: "Día 2 · Cardio HIIT",
+        type: "cardio",
+        exercises: [],
+        cardioNote: "5 rondas: 40s burpees · 40s mountain climber · 40s jump squat · 60s descanso.",
+      },
+      {
+        name: "Día 3 · Fuerza (mancuernas)",
+        focus: "cuerpo completo",
+        type: "gym",
+        exercises: [
+          { name: "Dumbbell romanian deadlift", sets: 3, reps: "12", restSec: REST_COMPOUND },
+          { name: "Walking lunge", sets: 3, reps: "20 pasos", restSec: REST_ISOLATION },
+          { name: "Three bench dip", sets: 3, reps: "máx", restSec: REST_ISOLATION },
+          { name: "Dumbbell biceps curl", sets: 3, reps: "12-15", restSec: REST_CORE },
+          { name: "Tuck crunch", sets: 3, reps: "15-20", restSec: REST_CORE },
+        ],
+      },
+      {
+        name: "Día 4 · Cardio",
+        type: "cardio",
+        exercises: [],
+        cardioNote: "30-40 min de carrera suave, o intervalos 8 × (1 min fuerte / 1 min andando).",
       },
     ],
   },
