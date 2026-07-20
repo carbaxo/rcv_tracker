@@ -124,12 +124,9 @@ export default function AppShell({ children }: { children: ReactNode }) {
           <Logo />
         </header>
 
-        <main
-          key={pathname}
-          className="flex-1 animate-fade px-4 py-6 pb-28 md:px-8 md:pb-8"
-        >
-          {children}
-        </main>
+        {/* Sin animación en <main>: transform/opacity aquí crearían un stacking
+            context/containing block que rompería los sheets (position: fixed). */}
+        <main className="flex-1 px-4 py-6 pb-28 md:px-8 md:pb-8">{children}</main>
 
         {/* Barra de navegación inferior tipo app nativa */}
         <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/5 bg-base-950/80 backdrop-blur-2xl pb-safe md:hidden">
